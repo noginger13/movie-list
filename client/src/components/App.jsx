@@ -2,7 +2,7 @@ import React from 'react';
 import MovieAdd from './MovieAdd.jsx';
 import MovieListNav from './MovieListNav.jsx';
 import MovieList from './MovieList.jsx';
-import movieDBSearch from '../movieDBSearch.js';
+// import movieDBSearch from '../movieDBSearch.js';
 
 
 class App extends React.Component {
@@ -34,20 +34,32 @@ class App extends React.Component {
 
   handleWatchedClick(event) {
     event.preventDefault();
-    this.setState()
+    var watchedMovie = event.target.value;
+    console.log(watchedMovie);
+    var movies = this.state.toWatch.slice();
+    for (var movie of movies) {
+      if (movie.title === watchedMovie) {
+        movie.watched = true;
+        console.log(movie);
+      }
+    }
+    this.setState(this.state.toWatch = movies);
   }
 
   searchMovies(query) {
     var searchMovies = this.state.toWatch.slice();
     var results = [];
-    this.setState({view: 'search'});
     for (var movie of searchMovies) {
       if (movie.title.indexOf(query) !== -1) {
         results.push(movie);
       }
     }
+    if(results.length < 1) {
+      this.setState({ toWatch: 'Nothing to see here!'});
+    } else {
+      this.setState({ toWatch: results});
+    }
     console.log(results);
-    this.setState({view: 'search', search: results});
   }
 
   render () {
@@ -61,6 +73,7 @@ class App extends React.Component {
           watched={this.state.watched}
           toWatch={this.state.toWatch}
           search={this.state.search}
+          toggleWatched={this.handleWatchedClick.bind(this)}
         />
       </div>
     )
